@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { fetchNews } from '../redux/action';
-import { useSelector, useDispatch, connect } from 'react-redux' ;
+import { useSelector, useDispatch, connect } from 'react-redux';
 import MaterialTable from '../components/Table/Table';
 import SearchInput from '../components/Search/SearchInput'
-import SelectHits from '../components/SelectHits/SelectHits' ;
-import { Dropdown, Menu } from 'semantic-ui-react' ;
+import HitsSelector from '../components/HitsSelector/HitsSelector';
+import { Pagination } from '@material-ui/lab';
+import Typography from '@material-ui/core/Typography';
+import { Header, Footer } from './styles';
+import Error from '../components/Error/Error';
+import ClipLoader from "react-spinners/ClipLoader";
+import { Wrapper } from './styles';
 
 
 const NewsView = () => {
@@ -16,51 +21,54 @@ const NewsView = () => {
     const nbPages = useSelector(state => state.nbPages);
 
     const [query, setQuery] = useState('');
-    const [hitsPerPage, setHitsPerPage] = useState(50);
-    const [page, setPage] = useState(0);
+    const [hitsPerPage, setHitsPerPage] = useState(20);
+    const [page, setPage] = useState(1);
 
 
     useEffect(() => {
-        dispatch(fetchNews(query, hitsPerPage, page))
-    }, []);// eslint-disable-line
+        dispatch(fetchNews(query, hitsPerPage, page - 1)) // page-1 because on API the pageNumber starts from 0 and we display from 1 in the pagination
+    }, [hitsPerPage, query, page, dispatch]);
 
 
-    const handleQueryChange = (value) => {
+    const handleQueryChange = (e) => {
+        const value = e.target.value;
         setQuery(value);
-        dispatch(fetchNews(value, hitsPerPage, page))
     }
 
-    const handleHitsPerPageChange = (value) => {
-      console.log("hits", value) ;
-        setPage(0);
+    const handleHitsPerPageChange = (e) => {
+        const value = e.target.value;
+        setPage(1);
         setHitsPerPage(value);
-        dispatch(fetchNews(query, value, 0))
     }
 
-    const handlePageChange = (value) => {
+    const handlePageChange = (event, value) => {
         setPage(value);
-        dispatch(fetchNews(query, hitsPerPage, value))
     }
 
+    if (error) {
+        return <Error />;
+    }
 
-
- 
 
     return (
-        <div >
-            <SelectHits hitsPerPage={hitsPerPage}   onChange={handleHitsPerPageChange} />
-            {/* <Menu compact style={{ marginLeft: 15 }}>
-    <Dropdown text='hitsPerPage' options={BidOptions} value={hitsPerPage} onChange={e=>handleHitsPerPageChange(e.target.value)} simple item />
-  </Menu> */}
-            <SearchInput type="text" value={query} onChange={e => handleQueryChange(e.target.value)} />
-            <select value={page} onChange={e => handlePageChange(e.target.value)}>
-            <option value="0">0</option>
-            <option value="1">1</option>
-            <option value={nbPages-1}>{nbPages-1}</option>
-            </select>
-           
-             <MaterialTable news={news} />
-        </div>
+        <Wrapper >
+            <Header>
+                <SearchInput type="text" value={query} onChange={handleQueryChange} />
+                <HitsSelector hitsPerPage={hitsPerPage} onChange={handleHitsPerPageChange} />
+            </Header>
+
+            {pending ? <ClipLoader size={50} color={"#36D7B7"} /> :
+                <Fragment>
+                    <MaterialTable news={news} />
+                    <Footer>
+                        <Typography>Page: {page} / {nbPages} </Typography>
+                        <Pagination count={nbPages} size={'large'} showFirstButton showLastButton onChange={handlePageChange} />
+                    </Footer>
+                </Fragment>
+            }
+
+
+        </Wrapper>
     )
 }
 

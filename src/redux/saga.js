@@ -5,7 +5,6 @@ import { fetchNewsSuccess, fetchNewsError } from "./action";
 
 function* fetchNews({query,hitsPerPage, page}) {
   try {
-    console.log(hitsPerPage, page);
     const data = yield fetch(
       `http://hn.algolia.com/api/v1/search?query=${query};hitsPerPage=${hitsPerPage};page=${page}`
     ).then((response) => response.json());
