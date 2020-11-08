@@ -56,8 +56,8 @@ const NewsView = () => {
 
     const handleHitsPerPageChange = (e) => {
         const value = e.target.value;
-        setPage(1);
         setHitsPerPage(value);
+        setPage(1);
     }
 
     const handlePageChange = (event, value) => {
@@ -82,7 +82,7 @@ const NewsView = () => {
 
             <Footer>
                 <Typography>Page: {page} / {nbPages} </Typography>
-                <Pagination count={nbPages} size={'large'} showFirstButton showLastButton onChange={handlePageChange} />
+                <Pagination count={nbPages} size={'large'}  showFirstButton showLastButton onChange={handlePageChange} page={page}/>
             </Footer>
 
         </Fragment>
