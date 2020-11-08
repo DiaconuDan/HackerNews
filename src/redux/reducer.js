@@ -16,7 +16,7 @@ const initialState = {
   news: [],
   error: null,
   nbPages: 50,
-  activeShowArticle: {},
+  showArticle: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -48,7 +48,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         articleLoading: false,
-        activeShowArticle: action.activeShowArticle,
+        showArticle: action.showArticle,
       };
     case FETCH_ARTICLE_ERROR:
       return {
@@ -71,7 +71,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         articleLoading: false,
-        activeShowArticle: action.activeShowArticle,
+        showArticle: action.showArticle,
       };
     default:
       return state;

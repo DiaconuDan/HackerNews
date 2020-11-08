@@ -6,7 +6,12 @@ import {
   fetchArticleByIdError,
   DELETE_ARTICLE_BY_ID_REQUEST,
 } from "./actions";
-import { fetchNewsSuccess, fetchNewsError, deleteArticleByIdError, deleteArticleByIdSuccess } from "./actions";
+import {
+  fetchNewsSuccess,
+  fetchNewsError,
+  deleteArticleByIdError,
+  deleteArticleByIdSuccess,
+} from "./actions";
 import { API_URL } from "../utils/utils";
 import { selectNews } from "../redux/selectors";
 
@@ -40,13 +45,12 @@ function* deleteArticle({ id }) {
     const news = yield select(selectNews);
     const updatedNews = news.filter((article) => article.objectID !== id);
     yield put(deleteArticleByIdSuccess(updatedNews));
-
   } catch (error) {
     yield put(deleteArticleByIdError(error));
   }
 }
 
-function* actionWatcher() {
+export function* actionWatcher() {
   yield takeLatest(FETCH_NEWS_REQUEST, fetchNews);
   yield takeLatest(FETCH_ARTICLE_REQUEST, fetchArticle);
   yield takeLatest(DELETE_ARTICLE_BY_ID_REQUEST, deleteArticle);

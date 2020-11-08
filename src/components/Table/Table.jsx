@@ -35,7 +35,7 @@ export default function MaterialTable({ news, setShowArticleId, showArticleId, s
           <TableBody>
             {news.map((element) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} >
+                <TableRow hover role="checkbox" tabIndex={-1} key={element.id} >
                   {columns.map((column) => {
                     const columnId = column.id;
                     const elementId = element.objectID;
@@ -45,8 +45,12 @@ export default function MaterialTable({ news, setShowArticleId, showArticleId, s
                       <TableCell key={elementId + columnId} align={column.align}>
                         {columnId !== "actions" ? element[column.id] :
                           <Fragment>
-                            {isActiveSelection ? <ClipLoader size={20} color={"black"} /> : <VisibilityIcon onClick={() => setShowArticleId(elementId)} />  }
-                            <DeleteIcon onClick={() => setDeleteArticleId(elementId)} /> </Fragment>}
+                            {isActiveSelection ?
+                              <span data-testid={"loadingIcon"}> <ClipLoader size={20} color={"black"} /> </span>
+                              :
+                              <VisibilityIcon onClick={() => setShowArticleId(elementId)} data-testid={"eyeIcon"} />
+                            }
+                            <DeleteIcon onClick={() => setDeleteArticleId(elementId)} data-testid={"deleteIcon"} /> </Fragment>}
                       </TableCell>
                     );
                   })}

@@ -4,4 +4,4 @@ export const selectError = (state) => state.error;
 
 export const selectNbPages = (state) => state.nbPages;
 
-export const selectActiveShowArticle = (state) => state.activeShowArticle;
+export const selectshowArticle = (state) => state.showArticle;

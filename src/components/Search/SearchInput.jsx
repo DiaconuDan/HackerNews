@@ -1,6 +1,6 @@
 import React from 'react';
 import { Input } from 'semantic-ui-react';
-import styled from 'styled-components' ;
+import styled from 'styled-components';
 
 const StyledInput = styled(Input)`
     padding-right: 30px;

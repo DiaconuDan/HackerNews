@@ -3,16 +3,16 @@ export const FETCH_NEWS_SUCCESS = "FETCH_NEWS_SUCCESS";
 export const FETCH_NEWS_ERROR = "FETCH_NEWS_ERROR";
 
 export const FETCH_ARTICLE_REQUEST = "FETCH_ARTICLE_REQUEST";
-export const FETCH_ARTICLE_SUCCESS = "FETCH_ARTICLE_SUCCESS" ;
+export const FETCH_ARTICLE_SUCCESS = "FETCH_ARTICLE_SUCCESS";
 export const FETCH_ARTICLE_ERROR = "FETCH_ARTICLE_ERROR";
 
-export const DELETE_ARTICLE_BY_ID_REQUEST = "DELETE_ARTICLE_BY_ID_REQUEST" ;
-export const DELETE_ARTICLE_BY_ID_SUCCESS = "DELETE_ARTICLE_BY_ID_SUCCESS" ;
-export const DELETE_ARTICLE_BY_ID_ERROR = "DELETE_ARTICLE_BY_ID_ERROR" ;
+export const DELETE_ARTICLE_BY_ID_REQUEST = "DELETE_ARTICLE_BY_ID_REQUEST";
+export const DELETE_ARTICLE_BY_ID_SUCCESS = "DELETE_ARTICLE_BY_ID_SUCCESS";
+export const DELETE_ARTICLE_BY_ID_ERROR = "DELETE_ARTICLE_BY_ID_ERROR";
 
-export const CLEANUP_ACTIVE_SHOW_ARTICLE= "CLEANUP_ACTIVE_SHOW_ARTICLEE" ;
-export const CLEANUP_ACTIVE_DELETE_ARTICLE_BY_ID= "CLEANUP_ACTIVE_DELETE_ARTICLE_BY_ID" ;
-
+export const CLEANUP_ACTIVE_SHOW_ARTICLE = "CLEANUP_ACTIVE_SHOW_ARTICLEE";
+export const CLEANUP_ACTIVE_DELETE_ARTICLE_BY_ID =
+  "CLEANUP_ACTIVE_DELETE_ARTICLE_BY_ID";
 
 export const fetchNews = (query, hitsPerPage, page) => {
   return {
@@ -45,10 +45,10 @@ export const fetchArticleById = (id) => {
   };
 };
 
-export const fetchArticleByIdSuccess = (activeShowArticle) => {
+export const fetchArticleByIdSuccess = (showArticle) => {
   return {
     type: FETCH_ARTICLE_SUCCESS,
-    activeShowArticle: activeShowArticle,
+    showArticle: showArticle,
   };
 };
 
@@ -80,15 +80,9 @@ export const deleteArticleByIdError = (id) => {
   };
 };
 
-
-
-export const cleanupActiveShowArticle = () => {
+export const cleanupshowArticle = () => {
   return {
     type: CLEANUP_ACTIVE_SHOW_ARTICLE,
-    activeShowArticle: {},
+    showArticle: {},
   };
-}
-
-
-
-
+};

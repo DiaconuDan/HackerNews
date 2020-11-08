@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { fetchNews, fetchArticleById, cleanupActiveShowArticle, deleteArticleById } from '../redux/actions';
+import { fetchNews, fetchArticleById, cleanupshowArticle, deleteArticleById } from '../redux/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import MaterialTable from '../components/Table/Table';
 import SearchInput from '../components/Search/SearchInput'
@@ -10,7 +10,7 @@ import { Header, Footer } from './styles';
 import Error from '../components/Error/Error';
 import ShowRowModal from '../components/ShowRowModal/ShowRowModal';
 import { INITIAL_HITS_PER_PAGE } from '../utils/utils';
-import { selectActiveShowArticle, selectError, selectNbPages, selectNews } from '../redux/selectors';
+import { selectshowArticle, selectError, selectNbPages, selectNews } from '../redux/selectors';
 
 const NewsView = () => {
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const NewsView = () => {
     const error = useSelector(selectError);
     const news = useSelector(selectNews);
     const nbPages = useSelector(selectNbPages);
-    const activeShowArticle = useSelector(selectActiveShowArticle);
+    const showArticle = useSelector(selectshowArticle);
 
     const [query, setQuery] = useState('');
     const [hitsPerPage, setHitsPerPage] = useState(INITIAL_HITS_PER_PAGE);
@@ -26,7 +26,7 @@ const NewsView = () => {
     const [showArticleId, setShowArticleId] = useState('');
     const [deleteArticleId, setDeleteArticleId] = useState('');
 
-    const shouldDisplayActiveShowArticle = Object.keys(activeShowArticle).length && showArticleId !== '';
+    const shouldDisplayshowArticle = Object.keys(showArticle).length && showArticleId !== '';
 
     useEffect(() => {
         dispatch(fetchNews(query, hitsPerPage, page - 1)) // page-1 because on API the pageNumber starts from 0 and we display from 1 in the pagination
@@ -37,7 +37,7 @@ const NewsView = () => {
         if (showArticleId) {
             dispatch(fetchArticleById(showArticleId))
         } else {
-            dispatch(cleanupActiveShowArticle());
+            dispatch(cleanupshowArticle());
         }
     }, [dispatch, showArticleId]);
 
@@ -78,7 +78,7 @@ const NewsView = () => {
             </Header>
 
             <MaterialTable news={news} setShowArticleId={setShowArticleId} showArticleId={showArticleId} setDeleteArticleId={setDeleteArticleId} />
-            <ShowRowModal open={shouldDisplayActiveShowArticle} handleClose={() => setShowArticleId('')} activeShowArticle={activeShowArticle} />
+            <ShowRowModal open={shouldDisplayshowArticle} handleClose={() => setShowArticleId('')} showArticle={showArticle} />
 
             <Footer>
                 <Typography>Page: {page} / {nbPages} </Typography>
