@@ -50,7 +50,7 @@ describe("Table component", () => {
   });
 
   test("action buttons should be loading and delete when showId matches rowID", () => {
-    const showArticleId = "500";
+    const showArticleId = news[0].objectID;
 
     const { getByTestId, queryByTestId } = render(
       <Table

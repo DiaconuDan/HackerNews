@@ -5,7 +5,7 @@ export const columns = [
     id: "num_comments",
     label: "Number of comments",
     minWidth: 170,
-    align: "right",
+    align: "left",
   },
   {
     id: "actions",
