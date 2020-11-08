@@ -6,13 +6,11 @@ export const columns = [
       label: 'Number of comments',
       minWidth: 170,
       align: 'right',
-      format: (value) => value.toLocaleString('en-US'),
     },
     {
       id: 'actions',
       label: 'Actions',
       minWidth: 170,
       align: 'right',
-      format: (value) => value.toLocaleString('en-US'),
     }
   ];

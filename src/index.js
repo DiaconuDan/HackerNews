@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { createStore, applyMiddleware, compose } from "redux";
 import { Provider } from 'react-redux';
 import createSagaMiddleware from "redux-saga";
-import  reducer  from "./redux/newsReducer";
+import  reducer  from "./redux/reducer";
 import rootSaga from  "./redux/saga" ;
 
 const sagaMiddleware = createSagaMiddleware();

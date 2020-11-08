@@ -1,9 +1,10 @@
 import React from "react";
 import { ErrorWrapper, ErrorMessage } from "./styles";
 
-const Error = () => (
+const Error = ({error}) => (
   <ErrorWrapper>
-    <ErrorMessage> API has failed! Try again </ErrorMessage>
+    <ErrorMessage> There was an error! Try reloading the page. </ErrorMessage>
+    <ErrorMessage> Error details: {error} </ErrorMessage>
   </ErrorWrapper>
 );
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { fetchNews } from '../redux/action';
-import { useSelector, useDispatch, connect } from 'react-redux';
+import { fetchNews, fetchArticleById, cleanupActiveShowArticle, deleteArticleById } from '../redux/actions';
+import { useSelector, useDispatch } from 'react-redux';
 import MaterialTable from '../components/Table/Table';
 import SearchInput from '../components/Search/SearchInput'
 import HitsSelector from '../components/HitsSelector/HitsSelector';
@@ -8,27 +8,46 @@ import { Pagination } from '@material-ui/lab';
 import Typography from '@material-ui/core/Typography';
 import { Header, Footer } from './styles';
 import Error from '../components/Error/Error';
-import ClipLoader from "react-spinners/ClipLoader";
-import { Wrapper } from './styles';
-
+import ShowRowModal from '../components/ShowRowModal/ShowRowModal';
+import { INITIAL_HITS_PER_PAGE } from '../utils/utils';
+import { selectActiveShowArticle, selectError, selectNbPages, selectNews } from '../redux/selectors';
 
 const NewsView = () => {
-
     const dispatch = useDispatch();
-    const error = useSelector(state => state.error);
-    const news = useSelector(state => state.news);
-    const pending = useSelector(state => state.pending);
-    const nbPages = useSelector(state => state.nbPages);
+
+    const error = useSelector(selectError);
+    const news = useSelector(selectNews);
+    const nbPages = useSelector(selectNbPages);
+    const activeShowArticle = useSelector(selectActiveShowArticle);
 
     const [query, setQuery] = useState('');
-    const [hitsPerPage, setHitsPerPage] = useState(20);
+    const [hitsPerPage, setHitsPerPage] = useState(INITIAL_HITS_PER_PAGE);
     const [page, setPage] = useState(1);
+    const [showArticleId, setShowArticleId] = useState('');
+    const [deleteArticleId, setDeleteArticleId] = useState('');
 
+    const shouldDisplayActiveShowArticle = Object.keys(activeShowArticle).length && showArticleId !== '';
 
     useEffect(() => {
         dispatch(fetchNews(query, hitsPerPage, page - 1)) // page-1 because on API the pageNumber starts from 0 and we display from 1 in the pagination
     }, [hitsPerPage, query, page, dispatch]);
 
+
+    useEffect(() => {
+        if (showArticleId) {
+            dispatch(fetchArticleById(showArticleId))
+        } else {
+            dispatch(cleanupActiveShowArticle());
+        }
+    }, [dispatch, showArticleId]);
+
+
+    useEffect(() => {
+        if (deleteArticleId) {
+            dispatch(deleteArticleById(deleteArticleId))
+            setShowArticleId('');
+        }
+    }, [dispatch, deleteArticleId]);
 
     const handleQueryChange = (e) => {
         const value = e.target.value;
@@ -45,47 +64,31 @@ const NewsView = () => {
         setPage(value);
     }
 
+
     if (error) {
-        return <Error />;
+        return <Error error={error} />;
     }
 
 
     return (
-        <Wrapper >
+        <Fragment>
             <Header>
                 <SearchInput type="text" value={query} onChange={handleQueryChange} />
                 <HitsSelector hitsPerPage={hitsPerPage} onChange={handleHitsPerPageChange} />
             </Header>
 
-            {pending ? <ClipLoader size={50} color={"#36D7B7"} /> :
-                <Fragment>
-                    <MaterialTable news={news} />
-                    <Footer>
-                        <Typography>Page: {page} / {nbPages} </Typography>
-                        <Pagination count={nbPages} size={'large'} showFirstButton showLastButton onChange={handlePageChange} />
-                    </Footer>
-                </Fragment>
-            }
+            <MaterialTable news={news} setShowArticleId={setShowArticleId} showArticleId={showArticleId} setDeleteArticleId={setDeleteArticleId} />
+            <ShowRowModal open={shouldDisplayActiveShowArticle} handleClose={() => setShowArticleId('')} activeShowArticle={activeShowArticle} />
 
+            <Footer>
+                <Typography>Page: {page} / {nbPages} </Typography>
+                <Pagination count={nbPages} size={'large'} showFirstButton showLastButton onChange={handlePageChange} />
+            </Footer>
 
-        </Wrapper>
+        </Fragment>
     )
 }
 
 
-const mapStateToProps = state => ({
-    error: state.error,
-    news: state.news,
-    pending: state.pending,
-})
 
-
-const mapDispatchToProps = dispatch => ({
-    fetchNews: (query, hitsPerPage, page) => dispatch(fetchNews(query, hitsPerPage, page)),
-});
-
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(NewsView);
+export default NewsView;

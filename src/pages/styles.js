@@ -17,6 +17,3 @@ export const Footer = styled.div`
     padding: 20px;
 `
 
-export const Wrapper = styled.div`
-    text-align:center;
-`
