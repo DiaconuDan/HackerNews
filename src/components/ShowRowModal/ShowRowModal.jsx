@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import Modal from '@material-ui/core/Modal';
 import { Wrapper } from '../Table/styles';
 import { useStyles } from './styles';
-
+import PropTypes from 'prop-types';
 
 export default function ShowRowModal({ open, handleClose, showArticle }) {
   const classes = useStyles();
@@ -29,3 +29,4 @@ export default function ShowRowModal({ open, handleClose, showArticle }) {
     </Wrapper>
   );
 }
+
