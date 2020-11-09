@@ -8,9 +8,8 @@ import { Pagination } from '@material-ui/lab';
 import Typography from '@material-ui/core/Typography';
 import { Header, Footer } from './styles';
 import Error from '../components/Error/Error';
-import ShowRowModal from '../components/ShowRowModal/ShowRowModal';
 import { INITIAL_HITS_PER_PAGE } from '../utils/utils';
-import { selectshowArticle, selectError, selectNbPages, selectNews } from '../redux/selectors';
+import {  selectError, selectNbPages, selectNews } from '../redux/selectors';
 
 const NewsView = () => {
     const dispatch = useDispatch();
@@ -18,36 +17,15 @@ const NewsView = () => {
     const error = useSelector(selectError);
     const news = useSelector(selectNews);
     const nbPages = useSelector(selectNbPages);
-    const showArticle = useSelector(selectshowArticle);
-
+    
     const [query, setQuery] = useState('');
     const [hitsPerPage, setHitsPerPage] = useState(INITIAL_HITS_PER_PAGE);
     const [page, setPage] = useState(1);
-    const [showArticleId, setShowArticleId] = useState('');
-    const [deleteArticleId, setDeleteArticleId] = useState('');
-
-    const shouldDisplayshowArticle = Object.keys(showArticle).length && showArticleId !== '';
-
+    
     useEffect(() => {
         dispatch(fetchNews(query, hitsPerPage, page - 1)) // page-1 because on API the pageNumber starts from 0 and we display from 1 in the pagination
     }, [hitsPerPage, query, page, dispatch]);
 
-
-    useEffect(() => {
-        if (showArticleId) {
-            dispatch(fetchArticleById(showArticleId))
-        } else {
-            dispatch(cleanupshowArticle());
-        }
-    }, [dispatch, showArticleId]);
-
-
-    useEffect(() => {
-        if (deleteArticleId) {
-            dispatch(deleteArticleById(deleteArticleId))
-            setShowArticleId('');
-        }
-    }, [dispatch, deleteArticleId]);
 
     const handleQueryChange = (e) => {
         const value = e.target.value;
@@ -77,9 +55,8 @@ const NewsView = () => {
                 <HitsSelector hitsPerPage={hitsPerPage} onChange={handleHitsPerPageChange} />
             </Header>
 
-            <MaterialTable news={news} setShowArticleId={setShowArticleId} showArticleId={showArticleId} setDeleteArticleId={setDeleteArticleId} />
-            <ShowRowModal open={shouldDisplayshowArticle} handleClose={() => setShowArticleId('')} showArticle={showArticle} />
-
+            <MaterialTable news={news}  />
+            
             <Footer>
                 <Typography>Page: {page} / {nbPages} </Typography>
                 <Pagination count={nbPages} size={'large'}  showFirstButton showLastButton onChange={handlePageChange} page={page}/>
