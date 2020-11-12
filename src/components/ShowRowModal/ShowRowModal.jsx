@@ -2,9 +2,8 @@ import React, { Fragment } from 'react';
 import Modal from '@material-ui/core/Modal';
 import { Wrapper } from '../Table/styles';
 import { useStyles } from './styles';
-import PropTypes from 'prop-types';
 
-export default function ShowRowModal({ open, handleClose, showArticle }) {
+export default function ShowRowModal({ open, handleClose, activeArticle }) {
   const classes = useStyles();
 
   if (!open) {
@@ -16,13 +15,11 @@ export default function ShowRowModal({ open, handleClose, showArticle }) {
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
       >
         <div className={classes.paper}>
-          <h2 id="simple-modal-title">Full details of "{showArticle.title}" by {showArticle.author} </h2>
-          <p id="simple-modal-description">
-            {JSON.stringify(showArticle)}
+          <h2 >Full details of "{activeArticle.title}" by {activeArticle.author} </h2>
+          <p>
+            {JSON.stringify(activeArticle)}
           </p>
         </div>
       </Modal>

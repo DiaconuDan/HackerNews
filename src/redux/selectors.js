@@ -4,4 +4,8 @@ export const selectError = (state) => state.error;
 
 export const selectNbPages = (state) => state.nbPages;
 
-export const selectshowArticle = (state) => state.showArticle;
+export const selectActiveArticle = (state) => state.activeArticle;
+
+export const selectLoadingShowArticleID = (state) => state.loadingShowArticleID;
+
+export const selectLoadingDeleteArticleID = (state) => state.loadingDeleteArticleID;

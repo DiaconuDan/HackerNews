@@ -5,22 +5,26 @@ import {
   FETCH_ARTICLE_REQUEST,
   FETCH_ARTICLE_SUCCESS,
   FETCH_ARTICLE_ERROR,
-  CLEANUP_ACTIVE_SHOW_ARTICLE,
-  DELETE_ARTICLE_BY_ID_SUCCESS,
-  DELETE_ARTICLE_BY_ID_ERROR,
-} from "./actions";
+  CLEAR_ACTIVE_ARTICLE,
+  DELETE_ARTICLE_REQUEST,
+  DELETE_ARTICLE_SUCCESS,
+  DELETE_ARTICLE_ERROR,
+} from "./constants";
 
-const initialState = {
+export const initialState = {
   newsLoading: false,
-  articleLoading: false,
+  loadingShowArticleID: "",
+  loadingDeleteArticleID: "",
   news: [],
   error: null,
   nbPages: 50,
-  showArticle: {},
+  activeArticle: {},
 };
 
-const reducer = (state = initialState, action) => {
+export const reducer = (state = initialState, action) => {
   switch (action.type) {
+    //  NEWS
+
     case FETCH_NEWS_REQUEST:
       return {
         ...state,
@@ -29,53 +33,67 @@ const reducer = (state = initialState, action) => {
     case FETCH_NEWS_SUCCESS:
       return {
         ...state,
-        newsLoading: false,
         news: action.news,
         nbPages: action.nbPages,
+        newsLoading: false,
       };
     case FETCH_NEWS_ERROR:
       return {
         ...state,
-        newsLoading: false,
         error: action.error,
+        newsLoading: false,
       };
+
+    // ARTICLE
+
     case FETCH_ARTICLE_REQUEST:
       return {
         ...state,
-        articleLoading: true,
+        loadingShowArticleID: action.id,
       };
     case FETCH_ARTICLE_SUCCESS:
       return {
         ...state,
-        articleLoading: false,
-        showArticle: action.showArticle,
+        activeArticle: action.activeArticle,
       };
     case FETCH_ARTICLE_ERROR:
       return {
         ...state,
-        articleLoading: false,
         error: action.error,
+        loadingShowArticleID: "",
       };
-    case DELETE_ARTICLE_BY_ID_SUCCESS:
+
+    // CLEAR ARTICLE
+
+    case CLEAR_ACTIVE_ARTICLE:
+      return {
+        ...state,
+        loadingShowArticleID: "",
+        activeArticle: {},
+      };
+
+    // DELETE ARTICLE
+
+    case DELETE_ARTICLE_REQUEST:
+      return {
+        ...state,
+        loadingDeleteArticleID: action.id,
+      }
+    case DELETE_ARTICLE_SUCCESS:
       return {
         ...state,
         news: action.news,
+        loadingDeleteArticleID: "",
+        loadingShowArticleID: "",
       };
-    case DELETE_ARTICLE_BY_ID_ERROR:
+    case DELETE_ARTICLE_ERROR:
       return {
         ...state,
         error: action.error,
       };
 
-    case CLEANUP_ACTIVE_SHOW_ARTICLE:
-      return {
-        ...state,
-        articleLoading: false,
-        showArticle: action.showArticle,
-      };
     default:
       return state;
   }
 };
 
-export default reducer;

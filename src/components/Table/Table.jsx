@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,42 +12,23 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { useSelector, useDispatch } from 'react-redux';
 import { useStyles } from './styles';
 import { columns } from './columns';
-import { fetchArticleById, cleanupshowArticle, deleteArticleById } from '../../redux/actions';
-import { selectshowArticle  } from '../../redux/selectors';
-import ShowRowModal from '../ShowRowModal/ShowRowModal' ;
+import { fetchArticle, clearActiveArticle, deleteArticle } from '../../redux/actions';
+import { selectActiveArticle, selectLoadingShowArticleID, selectLoadingDeleteArticleID } from '../../redux/selectors';
+import ShowRowModal from '../ShowRowModal/ShowRowModal';
 
 export default function MaterialTable({ news }) {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const showArticle = useSelector(selectshowArticle);
-  const [showArticleId, setShowArticleId] = useState('');
-  const [deleteArticleId, setDeleteArticleId] = useState('');
-  
+  const loadingDeleteArticleId = useSelector(selectLoadingDeleteArticleID);
+  const loadingShowArticleID = useSelector(selectLoadingShowArticleID);
+  const activeArticle = useSelector(selectActiveArticle);
 
-  const shouldDisplayshowArticle = Object.keys(showArticle).length && showArticleId !== '';
-
-
-  useEffect(() => {
-    if (showArticleId) {
-      dispatch(fetchArticleById(showArticleId))
-    } else {
-      dispatch(cleanupshowArticle());
-    }
-  }, [dispatch, showArticleId]);
-
-
-  useEffect(() => {
-    if (deleteArticleId) {
-      dispatch(deleteArticleById(deleteArticleId))
-      setShowArticleId('');
-    }
-  }, [dispatch, deleteArticleId]);
-
+  const shouldDisplayArticle = activeArticle && Object.keys(activeArticle).length && loadingShowArticleID !== '' ;
 
   return (
     <Fragment>
-      <ShowRowModal open={shouldDisplayshowArticle} handleClose={() => setShowArticleId('')} showArticle={showArticle} />
+      <ShowRowModal open={shouldDisplayArticle} handleClose={() => dispatch(clearActiveArticle())} activeArticle={activeArticle} />
       <Paper className={classes.root}>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label="sticky table">
@@ -71,18 +52,23 @@ export default function MaterialTable({ news }) {
                     {columns.map((column) => {
                       const columnId = column.id;
                       const elementId = element.objectID;
-                      const isActiveSelection = showArticleId === element.objectID; // display loading indicator IF we press the see details eye. I noticed API is very slow sometimes
+                      const isActiveEyeSelection = loadingShowArticleID === element.objectID; // display loading indicator IF we press the see details eye. I noticed API is very slow sometimes
+                      // const isActiveDeleteSelection = loadingDeleteArticleId === element.objectID; // same for delete. But right now there is no API call
 
                       return (
                         <TableCell key={elementId + columnId} align={column.align}>
                           {columnId !== "actions" ? element[column.id] :
                             <Fragment>
-                              {isActiveSelection ?
+                              {isActiveEyeSelection ?
                                 <span data-testid={"loadingIcon"}> <ClipLoader size={20} color={"black"} /> </span>
                                 :
-                                <VisibilityIcon onClick={() => setShowArticleId(elementId)} data-testid={"eyeIcon"} />
+                                <VisibilityIcon onClick={() => dispatch(fetchArticle(elementId))} data-testid={"eyeIcon"} />
                               }
-                              <DeleteIcon onClick={() => setDeleteArticleId(elementId)} data-testid={"deleteIcon"} /> </Fragment>}
+                              
+                                <DeleteIcon onClick={() => dispatch(deleteArticle(elementId))} data-testid={"deleteIcon"} />
+
+
+                            </Fragment>}
                         </TableCell>
                       );
                     })}

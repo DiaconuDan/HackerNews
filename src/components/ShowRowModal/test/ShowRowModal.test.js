@@ -4,7 +4,7 @@ import ShowRowModal from "../ShowRowModal";
 
 describe("ShowRowModal component", () => {
   const handleClose = jest.fn();
-  const showArticle = {
+  const activeArticle = {
     title: "Harry Potter",
     author: "J. K. Rowling",
     comments: 500,
@@ -16,7 +16,7 @@ describe("ShowRowModal component", () => {
     const { container } = render(
       <ShowRowModal
         handleClose={handleClose}
-        showArticle={showArticle}
+        activeArticle={activeArticle}
         open={open}
       />
     );
@@ -29,18 +29,18 @@ describe("ShowRowModal component", () => {
     render(
       <ShowRowModal
         handleClose={handleClose}
-        showArticle={showArticle}
+        activeArticle={activeArticle}
         open={open}
       />
     );
 
     expect(
       screen.getByText(
-        `Full details of "${showArticle.title}" by ${showArticle.author}`
+        `Full details of "${activeArticle.title}" by ${activeArticle.author}`
       )
     ).toBeInTheDocument();
     expect(
-      screen.getByText(`${JSON.stringify(showArticle)}`)
+      screen.getByText(`${JSON.stringify(activeArticle)}`)
     ).toBeInTheDocument();
   });
 });

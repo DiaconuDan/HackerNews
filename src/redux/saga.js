@@ -1,17 +1,20 @@
 import { put, takeLatest, all, select } from "redux-saga/effects";
+
 import {
   FETCH_NEWS_REQUEST,
   FETCH_ARTICLE_REQUEST,
-  fetchArticleByIdSuccess,
-  fetchArticleByIdError,
-  DELETE_ARTICLE_BY_ID_REQUEST,
-} from "./actions";
+  DELETE_ARTICLE_REQUEST,
+} from "./constants";
 import {
   fetchNewsSuccess,
   fetchNewsError,
-  deleteArticleByIdError,
-  deleteArticleByIdSuccess,
+  fetchArticleSuccess,
+  fetchArticleError,
+  deleteArticleSuccess,
+  deleteArticleError,
 } from "./actions";
+
+
 import { API_URL } from "../utils/utils";
 import { selectNews } from "../redux/selectors";
 
@@ -31,9 +34,9 @@ function* fetchArticle({ id }) {
     const data = yield fetch(`${API_URL}/items/${id}`).then((response) =>
       response.json()
     );
-    yield put(fetchArticleByIdSuccess(data));
+    yield put(fetchArticleSuccess(data));
   } catch (error) {
-    yield put(fetchArticleByIdError(error));
+    yield put(fetchArticleError(error));
   }
 }
 
@@ -43,17 +46,19 @@ function* deleteArticle({ id }) {
     // will just update the news from store
 
     const news = yield select(selectNews);
-    const updatedNews = news.filter((article) => article.objectID !== id);
-    yield put(deleteArticleByIdSuccess(updatedNews));
+    const updatedNews = news.filter(
+      (activeArticle) => activeArticle.objectID !== id
+    );
+    yield put(deleteArticleSuccess(updatedNews));
   } catch (error) {
-    yield put(deleteArticleByIdError(error));
+    yield put(deleteArticleError(error));
   }
 }
 
 export function* actionWatcher() {
   yield takeLatest(FETCH_NEWS_REQUEST, fetchNews);
   yield takeLatest(FETCH_ARTICLE_REQUEST, fetchArticle);
-  yield takeLatest(DELETE_ARTICLE_BY_ID_REQUEST, deleteArticle);
+  yield takeLatest(DELETE_ARTICLE_REQUEST, deleteArticle);
 }
 
 export default function* rootSaga() {

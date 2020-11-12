@@ -11,10 +11,8 @@ export default function SelectHits({ hitsPerPage, onChange }) {
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">hitsPerPage</InputLabel>
+        <InputLabel>hitsPerPage</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
           value={hitsPerPage}
           onChange={onChange}
         >

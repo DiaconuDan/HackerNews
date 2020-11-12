@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { fetchNews, fetchArticleById, cleanupshowArticle, deleteArticleById } from '../redux/actions';
+import { fetchNews} from '../redux/actions';
 import { useSelector, useDispatch } from 'react-redux';
 import MaterialTable from '../components/Table/Table';
 import SearchInput from '../components/Search/SearchInput'
